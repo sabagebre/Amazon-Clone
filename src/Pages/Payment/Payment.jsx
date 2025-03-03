@@ -15,6 +15,10 @@ import { useNavigate } from "react-router-dom";
 import { Type } from "../../Utility/action.type";
 import LayOut from "../../components/LayOut/LayOut";
 
+
+
+
+
 const Payment = () => {
   const [{ user, basket }, dispatch] = useContext(DataContext);
   const [cardError, setCardError] = useState(null);
@@ -61,21 +65,26 @@ const Payment = () => {
 
       // 3. after the confirmation ---> order firestore database Save, clear basket
 
-      await db
-        .collection("users")
-        .doc(user.uid)
-        .collection("orders")
-        .doc(paymentIntent.id)
-        .set({
-          basket: basket,
-          amount: paymentIntent.amount,
-          created: paymentIntent.created,
-        });
+     await db
+       .collection("users")
+       .doc(user.uid)
+       .collection("orders")
+       .doc(paymentIntent.id)
+       .set({
+         basket: basket,
+         amount: paymentIntent.amount,
+         created: paymentIntent.created,
+       });
       // Empty in the basket
       dispatch({ type: Type.EMPTY_BASKET });
 
       setProcessing(false);
-      navigate("/orders", { state: { msg: "You have placed new order" } });
+      navigate("/orders", {
+        replace: true,
+        state: { msg: "You have placed a new order" },
+      });
+
+     
     } catch (error) {
       console.log("can't fetch", error);
       setProcessing(false);
@@ -147,3 +156,8 @@ const Payment = () => {
 };
 
 export default Payment;
+
+
+
+
+
